@@ -9,7 +9,7 @@ class Server():
         #list to store clients(sockets and addresses)
         self.connections = []
         self.headerSize = 10
-        self.addr = (socket.gethostname(),port)
+        self.addr = ("localhost",port)
         self.sock.bind(self.addr)
         print(f"Server is now running at {self.addr[0]}:{self.addr[1]}...")
         self.sock.listen(5)
