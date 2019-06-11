@@ -24,13 +24,14 @@ class ServerMainPage(GridLayout):
             while self.MainApp.gui_running:
                 self.MainApp.server.accept_conn()
                 client = self.MainApp.server.connections[-1]
-                self.clientsList.add_widget(ClientCard(client))
+                self.clientsList.add_widget(ClientCard(self.MainApp,client))
 
 #this widget is for the client card in the server page
 class ClientCard(GridLayout):
-    def __init__(self,client,**kwargs):
+    def __init__(self,MainApp,client,**kwargs):
         super().__init__(**kwargs)
         self.cols = 3
+        self.MainApp = MainApp
         ##self.username = client["username"]
         self.client_ip = client["address"][0]
         self.client_port = client["address"][1]
@@ -38,7 +39,12 @@ class ClientCard(GridLayout):
         ###self.username_label = Label(text=self.username,font_size=12)
         self.address_label = Label(text=f"{self.client_ip}:{self.client_port}",font_size=10)
         self.connect_button = Button(text="Connect")
+        self.connect_button.bind(on_press=self.connectToClient)
         #adding the card components
         ###self.add_widget(self.username_label)
         self.add_widget(self.address_label)
         self.add_widget(self.connect_button)
+
+    def connectToClient(self,*_):
+        self.MainApp.CurrentClientCard = self
+        self.MainApp.screen_manager.current = "ServerSendComms"

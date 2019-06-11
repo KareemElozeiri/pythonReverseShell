@@ -10,4 +10,7 @@ class ClientRecvCommPage(GridLayout):
         super().__init__(**kwargs)
         self.MainApp = MainApp
         self.cols = 1
-        self.add_widget(Label(text="Testing bitchhhh!!!"))
+        self.pageHead = Label(text="The commands sent to your machine")
+        self.CommAndRes = Label()
+        self.add_widget(self.pageHead)
+        self.add_widget(self.CommAndRes)

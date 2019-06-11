@@ -10,6 +10,7 @@ from initializingPage import InitializingPage
 from serverMainPage import ServerMainPage , ClientCard
 from clientConnectPage import ClientConnectPage
 from clientRecvCommPage import ClientRecvCommPage
+from serverSendCommsPage import ServerSendCommsPage
 from reverseShellClient import ClientReverseShell
 from time import sleep
 import threading
@@ -43,6 +44,9 @@ class UnderControl(App):
         #adding the page the client page that shows the server sent commands and their response to the user
         self.clientRecvCommPage = ClientRecvCommPage(self)
         self.add_new_page(self.clientRecvCommPage,"ClientRecvComm")
+        #adding the page through which  the server interacts with the chosen client
+        self.serverSendCommsPage = ServerSendCommsPage(self)
+        self.add_new_page(self.serverSendCommsPage,"ServerSendComms")
 
         return self.screen_manager
 
