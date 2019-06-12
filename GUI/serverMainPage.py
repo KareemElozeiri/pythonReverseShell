@@ -3,6 +3,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
+from serverSendCommsPage import ServerSendCommsPage
 import threading
 
 #this is the page for showing the clients of the server to the user(if there)
@@ -33,6 +34,7 @@ class ClientCard(GridLayout):
         self.cols = 3
         self.MainApp = MainApp
         ##self.username = client["username"]
+        self.client_num = self.MainApp.server.connections.index(client)
         self.client_ip = client["address"][0]
         self.client_port = client["address"][1]
         self.client_sock = client["Socket"]
@@ -47,4 +49,11 @@ class ClientCard(GridLayout):
 
     def connectToClient(self,*_):
         self.MainApp.CurrentClientCard = self
+        print(self.MainApp.CurrentClientCard.client_num)
+
+        if self.MainApp.firstServerSendCommPage:
+            self.MainApp.serverSendCommsPage = ServerSendCommsPage(self.MainApp)
+            self.MainApp.add_new_page(self.MainApp.serverSendCommsPage,"ServerSendComms")
+            self.MainApp.firstServerSendCommPage = False
+
         self.MainApp.screen_manager.current = "ServerSendComms"

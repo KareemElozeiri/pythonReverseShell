@@ -50,10 +50,11 @@ class InitializingPage(GridLayout):
             self.MainApp.server = ReverseShellServer(self.MainApp.server_port)
         except Exception as err:
             self.MainApp.serverMainPage.info_label.text = str(err)
-            
+
         self.MainApp.actingAsServer = True
         self.MainApp.screen_manager.current = "ServerConnections"
 
 
     def goToClient(self,*_):
+        self.actingAsClient = True
         self.MainApp.screen_manager.current = "ClientConnectToServer"

@@ -21,6 +21,8 @@ class UnderControl(App):
     def build(self):
         self.gui_running = True
         self.actingAsServer = False
+        self.actingAsClient = False
+        self.firstServerSendCommPage = True
         self.screen_manager = ScreenManager()
         #adding the intro page of the app to the app screen manager
         self.introPage =  IntroPage(self)
@@ -43,10 +45,11 @@ class UnderControl(App):
         self.add_new_page(self.clientConnectPage,"ClientConnectToServer")
         #adding the page the client page that shows the server sent commands and their response to the user
         self.clientRecvCommPage = ClientRecvCommPage(self)
-        self.add_new_page(self.clientRecvCommPage,"ClientRecvComm")
-        #adding the page through which  the server interacts with the chosen client
-        self.serverSendCommsPage = ServerSendCommsPage(self)
-        self.add_new_page(self.serverSendCommsPage,"ServerSendComms")
+        def client_backend_activation(*_):
+            self.RecvExec_Thread = threading.Thread(target=self.clientRecvCommPage.recvAndExecComm,args=[])
+            self.RecvExec_Thread.start()
+
+        self.add_new_page(self.clientRecvCommPage,"ClientRecvComm",client_backend_activation)
 
         return self.screen_manager
 
