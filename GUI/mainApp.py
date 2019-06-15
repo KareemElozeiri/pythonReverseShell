@@ -13,6 +13,7 @@ from clientRecvCommPage import ClientRecvCommPage
 from serverSendCommsPage import ServerSendCommsPage
 from reverseShellClient import ClientReverseShell
 from time import sleep
+from kivy.core.window import Window
 import threading
 kivy.require("1.10.1")
 

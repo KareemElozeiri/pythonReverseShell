@@ -3,6 +3,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
+from kivy.core.window import Window
 from transformingButton import TransformingButton
 from reverseShellServer import *
 from reverseShellClient import *

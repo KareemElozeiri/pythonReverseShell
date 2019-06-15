@@ -49,7 +49,6 @@ class ClientCard(GridLayout):
 
     def connectToClient(self,*_):
         self.MainApp.CurrentClientCard = self
-        print(self.MainApp.CurrentClientCard.client_num)
 
         if self.MainApp.firstServerSendCommPage:
             self.MainApp.serverSendCommsPage = ServerSendCommsPage(self.MainApp)
