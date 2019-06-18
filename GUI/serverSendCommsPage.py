@@ -13,11 +13,13 @@ class ServerSendCommsPage(GridLayout):
         self.clientNum = self.MainApp.CurrentClientCard.client_num
         #taking care of the page widgets
         self.ShowCommRes = ScrollableLabel("Connected and in control of this machine")
-        self.SendingCommBox = GridLayout(cols=3)
+        self.SendingCommBox = GridLayout(cols=3,padding=[0,0,0,0.05*Window.height])
         self.CommInput = TextInput(hint_text="Type commands here")
         self.SendingCommButton = Button(text=">>")
-        self.SendingCommButton.bind(on_press=self.SendCommToClient)
+        self.SendingCommButton.bind(on_press=self.sendCommToClient)
+
         self.returnButton = Button(text="Return")
+        self.returnButton.bind(on_press=self.returnToClientsList)
 
         self.SendingCommBox.add_widget(self.CommInput)
         self.SendingCommBox.add_widget(self.SendingCommButton)
@@ -26,9 +28,12 @@ class ServerSendCommsPage(GridLayout):
         self.add_widget(self.SendingCommBox)
         self.add_widget(self.ShowCommRes)
 
-    def SendCommToClient(self,*_):
+    def sendCommToClient(self,*_):
         Comm = self.CommInput.text
         self.CommInput.text = ""
         currentDir = self.MainApp.server.send_command("pwd",self.clientNum)
         commRes = self.MainApp.server.send_command(Comm,self.clientNum)
         self.ShowCommRes.updateContent(f"\n[color=00FF00]{currentDir}${Comm}[/color]\n[color=FF0000]{commRes}[/color]")
+
+    def returnToClientsList(self,*_):
+        self.MainApp.screen_manager.current = "ServerConnections"

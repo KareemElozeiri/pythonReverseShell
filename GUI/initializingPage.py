@@ -13,8 +13,8 @@ class InitializingPage(GridLayout):
         super().__init__(**kwargs)
         self.MainApp = MainApp
         self.cols = 1
-        self.server_button = TransformingButton("Act as a Server",["Initialize server","Cancel"])
-        self.client_button = TransformingButton("Act as a client",["Initialize client","Cancel"])
+        self.server_button = TransformingButton("Act as a Server",["Initialize server","Cancel"],padding=[0,0.2*Window.height,0,0.05*Window.height])
+        self.client_button = TransformingButton("Act as a client",["Initialize client","Cancel"],padding=[0,0.05*Window.height,0,0.2*Window.height])
         #preventing the displaying of the secondary buttons of the two objects at the same time
         self.server_button.main_button.fbind('on_press',self.CloseTransformingButton,self.client_button)
         self.client_button.main_button.fbind('on_press',self.CloseTransformingButton,self.server_button)
@@ -57,5 +57,4 @@ class InitializingPage(GridLayout):
 
 
     def goToClient(self,*_):
-        self.actingAsClient = True
         self.MainApp.screen_manager.current = "ClientConnectToServer"

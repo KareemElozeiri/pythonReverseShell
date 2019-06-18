@@ -31,7 +31,7 @@ class UnderControl(App):
         #adding the the initializing page to the app screen manager
         self.initializingPage = InitializingPage(self)
         self.add_new_page(self.initializingPage,"Initialize")
-        #adding the server page to the app screen manager
+        #adding the server main page(that shows the clients list) to the app screen manager
         self.serverMainPage = ServerMainPage(self)
         self.first_enter_serverMainPage = True
         def server_backend_activation(*_):
@@ -63,9 +63,18 @@ class UnderControl(App):
 
     def on_stop(self):
         self.gui_running = False
-        #making a flase client to termainate the acceptance_thread of the app
+        #acts to be taken on closing the app in case it was acting as a server
         if self.actingAsServer:
+            #closing the server connections
+            for client in self.server.connections:
+                client["Socket"].close()
+            #making a flase client to termainate the acceptance_thread of the app
             fakeClient = ClientReverseShell("localhost",self.server_port)
+        elif self.actingAsClient:
+            self.MainApp.client.sock.close()
+
+
+
 
 
 

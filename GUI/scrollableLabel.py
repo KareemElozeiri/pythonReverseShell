@@ -6,7 +6,13 @@ from kivy.core.window import Window
 class ScrollableLabel(ScrollView):
     def __init__(self,initialContent="",**kwargs):
         super().__init__(**kwargs)
-        self.layout = GridLayout(cols=1)
+        self.scroll_y = 1
+        self.scroll_distance = 0
+        self.do_scroll_y = True
+        self.bar_width = 10
+        self.scroll_type = ['bars','content']
+        self.bar_pos_y = "right"
+        self.layout = GridLayout(size_hint_y=None,cols=1)
         self.contentLabel = Label(markup=True,text=initialContent,
         halign="center")
         self.scrollToPoint = Label()
@@ -16,7 +22,7 @@ class ScrollableLabel(ScrollView):
 
     def updateContent(self,newContentToAdd):
         self.contentLabel.text += newContentToAdd
-        self.layout.height = 1.25*self.contentLabel.texture_size[1]
+        self.layout.height = self.contentLabel.texture_size[1]
         self.contentLabel.height = self.contentLabel.texture_size[1]
         self.contentLabel.text_size = (self.contentLabel.width,None)
-        self.scroll_to(self.scrollToPoint)
+        self.scroll_to(self.scrollToPoint,animate=True)

@@ -31,6 +31,7 @@ class ServerMainPage(GridLayout):
 class ClientCard(GridLayout):
     def __init__(self,MainApp,client,**kwargs):
         super().__init__(**kwargs)
+        self.firstConnect = True
         self.cols = 3
         self.MainApp = MainApp
         ##self.username = client["username"]
@@ -49,10 +50,10 @@ class ClientCard(GridLayout):
 
     def connectToClient(self,*_):
         self.MainApp.CurrentClientCard = self
-
-        if self.MainApp.firstServerSendCommPage:
-            self.MainApp.serverSendCommsPage = ServerSendCommsPage(self.MainApp)
-            self.MainApp.add_new_page(self.MainApp.serverSendCommsPage,"ServerSendComms")
-            self.MainApp.firstServerSendCommPage = False
-
-        self.MainApp.screen_manager.current = "ServerSendComms"
+        #creating the shell for the client of this card on first time of connection
+        if self.firstConnect:
+            self.serverSendCommsPage = ServerSendCommsPage(self.MainApp)
+            self.MainApp.add_new_page(self.serverSendCommsPage,f"ServerSendComms{self.client_num}")
+            self.firstConnect = False
+            
+        self.MainApp.screen_manager.current = f"ServerSendComms{self.client_num}"
