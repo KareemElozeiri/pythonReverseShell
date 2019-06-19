@@ -1,10 +1,11 @@
+import socket
+import threading
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
 from serverSendCommsPage import ServerSendCommsPage
-import threading
 
 #this is the page for showing the clients of the server to the user(if there)
 #and choosing a client to send commands to this machine
@@ -23,10 +24,17 @@ class ServerMainPage(GridLayout):
 
     def server_conn_acceptance(self):
             while self.MainApp.gui_running:
-                self.MainApp.server.accept_conn()
-                client = self.MainApp.server.connections[-1]
-                self.clientsList.add_widget(ClientCard(self.MainApp,client))
+                try:
+                    self.MainApp.server.accept_conn()
+                    client = self.MainApp.server.connections[-1]
+                    #getting the client username
+                    curr_client_num = self.MainApp.server.connections.index(client)
+                    curr_client_username = self.MainApp.server.recv_data(curr_client_num)
+                    client["username"] = curr_client_username
 
+                    self.clientsList.add_widget(ClientCard(self.MainApp,client))
+                except socket.error as err:
+                    pass
 #this widget is for the client card in the server page
 class ClientCard(GridLayout):
     def __init__(self,MainApp,client,**kwargs):
@@ -34,17 +42,17 @@ class ClientCard(GridLayout):
         self.firstConnect = True
         self.cols = 3
         self.MainApp = MainApp
-        ##self.username = client["username"]
+        self.username = client["username"]
         self.client_num = self.MainApp.server.connections.index(client)
         self.client_ip = client["address"][0]
         self.client_port = client["address"][1]
         self.client_sock = client["Socket"]
-        ###self.username_label = Label(text=self.username,font_size=12)
+        self.username_label = Label(text=self.username,font_size=12)
         self.address_label = Label(text=f"{self.client_ip}:{self.client_port}",font_size=10)
         self.connect_button = Button(text="Connect")
         self.connect_button.bind(on_press=self.connectToClient)
         #adding the card components
-        ###self.add_widget(self.username_label)
+        self.add_widget(self.username_label)
         self.add_widget(self.address_label)
         self.add_widget(self.connect_button)
 
@@ -55,5 +63,5 @@ class ClientCard(GridLayout):
             self.serverSendCommsPage = ServerSendCommsPage(self.MainApp)
             self.MainApp.add_new_page(self.serverSendCommsPage,f"ServerSendComms{self.client_num}")
             self.firstConnect = False
-            
+
         self.MainApp.screen_manager.current = f"ServerSendComms{self.client_num}"

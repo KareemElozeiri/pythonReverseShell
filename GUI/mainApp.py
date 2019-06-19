@@ -44,13 +44,6 @@ class UnderControl(App):
         #adding the client page that connects the user's machine to the server
         self.clientConnectPage = ClientConnectPage(self)
         self.add_new_page(self.clientConnectPage,"ClientConnectToServer")
-        #adding the page the client page that shows the server sent commands and their response to the user
-        self.clientRecvCommPage = ClientRecvCommPage(self)
-        def client_backend_activation(*_):
-            self.RecvExec_Thread = threading.Thread(target=self.clientRecvCommPage.recvAndExecComm,args=[])
-            self.RecvExec_Thread.start()
-
-        self.add_new_page(self.clientRecvCommPage,"ClientRecvComm",client_backend_activation)
 
         return self.screen_manager
 
@@ -70,6 +63,7 @@ class UnderControl(App):
                 client["Socket"].close()
             #making a flase client to termainate the acceptance_thread of the app
             fakeClient = ClientReverseShell("localhost",self.server_port)
+            fakeClient.send_data("")
         elif self.actingAsClient:
             self.MainApp.client.sock.close()
 

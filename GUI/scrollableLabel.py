@@ -6,8 +6,7 @@ from kivy.core.window import Window
 class ScrollableLabel(ScrollView):
     def __init__(self,initialContent="",**kwargs):
         super().__init__(**kwargs)
-        self.scroll_y = 1
-        self.scroll_distance = 0
+        self.scroll_y = 0
         self.do_scroll_y = True
         self.bar_width = 10
         self.scroll_type = ['bars','content']
