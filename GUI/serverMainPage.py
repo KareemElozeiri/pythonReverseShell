@@ -14,7 +14,7 @@ class ServerMainPage(GridLayout):
         super().__init__(**kwargs)
         self.MainApp = MainApp
         self.cols = 1
-        self.info_label = Label(font_size=20)
+        self.info_label = Label(markup=True,font_size=20)
         self.info_label.text="Server is listening for connections..."
         self.add_widget(self.info_label)
         #creating and displaying the list of client of the server
@@ -31,7 +31,6 @@ class ServerMainPage(GridLayout):
                     curr_client_num = self.MainApp.server.connections.index(client)
                     curr_client_username = self.MainApp.server.recv_data(curr_client_num)
                     client["username"] = curr_client_username
-
                     self.clientsList.add_widget(ClientCard(self.MainApp,client))
                 except socket.error as err:
                     pass
@@ -44,6 +43,7 @@ class ClientCard(GridLayout):
         self.MainApp = MainApp
         self.username = client["username"]
         self.client_num = self.MainApp.server.connections.index(client)
+        self.id = f"client{self.client_num}"
         self.client_ip = client["address"][0]
         self.client_port = client["address"][1]
         self.client_sock = client["Socket"]

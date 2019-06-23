@@ -7,6 +7,9 @@ from kivy.core.window import Window
 from transformingButton import TransformingButton
 from reverseShellServer import *
 from reverseShellClient import *
+from clientConnectPage import ClientConnectPage
+from serverMainPage import ServerMainPage , ClientCard
+import threading
 #this page is for choosing whether the device will act server/client
 class InitializingPage(GridLayout):
     def __init__(self,MainApp,**kwargs):
@@ -47,6 +50,17 @@ class InitializingPage(GridLayout):
 
     def goToServer(self,*_):
         try:
+            #adding the server main page(that shows the clients list) to the app screen manager
+            self.MainApp.serverMainPage = ServerMainPage(self.MainApp)
+            self.MainApp.first_enter_serverMainPage = True
+            def server_backend_activation(*_):
+                if self.MainApp.first_enter_serverMainPage:
+                    self.MainApp.acceptance_thread = threading.Thread(target=self.MainApp.serverMainPage.server_conn_acceptance,args=[])
+                    self.MainApp.acceptance_thread.start()
+                    self.MainApp.first_enter_serverMainPage = False
+
+            self.MainApp.add_new_page(self.MainApp.serverMainPage,"ServerConnections",server_backend_activation)
+            #creating the server reverseshell backend
             self.MainApp.server_port = 9999
             self.MainApp.server = ReverseShellServer(self.MainApp.server_port)
         except Exception as err:
@@ -54,7 +68,12 @@ class InitializingPage(GridLayout):
 
         self.MainApp.actingAsServer = True
         self.MainApp.screen_manager.current = "ServerConnections"
+        print(len(self.MainApp.screen_manager.screens))
+
 
 
     def goToClient(self,*_):
+        #adding the client page that connects the user's machine to the server
+        self.MainApp.clientConnectPage = ClientConnectPage(self.MainApp)
+        self.MainApp.add_new_page(self.MainApp.clientConnectPage,"ClientConnectToServer")
         self.MainApp.screen_manager.current = "ClientConnectToServer"

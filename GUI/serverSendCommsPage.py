@@ -31,9 +31,22 @@ class ServerSendCommsPage(GridLayout):
     def sendCommToClient(self,*_):
         Comm = self.CommInput.text
         self.CommInput.text = ""
-        currentDir = self.MainApp.server.send_command("pwd",self.clientNum)
-        commRes = self.MainApp.server.send_command(Comm,self.clientNum)
-        self.ShowCommRes.updateContent(f"\n[color=00FF00]{currentDir}${Comm}[/color]\n[color=FF0000]{commRes}[/color]")
+        try:
+            currentDir = self.MainApp.server.send_command("pwd",self.clientNum)
+            commRes = self.MainApp.server.send_command(Comm,self.clientNum)
+            self.ShowCommRes.updateContent(f"\n[color=00FF00]{currentDir}${Comm}[/color]\n[color=FF0000]{commRes}[/color]")
+        except:
+            from serverMainPage import ClientCard
+            lost_client = self.MainApp.server.connections[self.clientNum]
+            self.MainApp.serverMainPage.info_label.text = f"[color=FF0000]Lost connection with {lost_client['username']}...[/color]"
+            lost_client["Socket"].close()
+            #removing related widgets and screens
+            self.MainApp.serverMainPage.clientsList.remove_widget(self.MainApp.CurrentClientCard)
+            del self.MainApp.server.connections[self.clientNum]
+            del self.MainApp.screen_manager.screens[self.clientNum+3]
+            self.MainApp.screen_manager.current = "ServerConnections"
+
 
     def returnToClientsList(self,*_):
+        self.MainApp.serverMainPage.info_label.text = "Server is listening for connections..."
         self.MainApp.screen_manager.current = "ServerConnections"
